@@ -41,16 +41,18 @@ export default class Controller {
         if (Path.extname(path).match(".zip")) {
             this.logger.info('Arquivo ZIP para ser extraido...');
             
-            const saved = await this.zipService.extractFiles(path);
-            
-            this.files = saved;
+            this.files = await this.zipService.extractFiles(path);
             
             this.logger.info('Arquivos extraidos com sucesso!');
             try {
                 this.logger.info('Enviando arquivos no canal ...');
                 
                 this.files.forEach( 
-                    async file => await this.telegramService.sendPhotoInChannel( this.channel || '', file )
+                    async file => {
+                        await this.telegramService.sendPhotoInChannel( this.channel || '', file )
+                        // Deleta cada arquivo
+                        this.deleteFile(file);
+                    } 
                 );
                 this.logger.info('Envio finalizado!');
                 
@@ -59,11 +61,23 @@ export default class Controller {
             }
 
         } else {
-            await this.telegramService.sendVideoInChannel( this.channel || '', path )
+            await this.telegramService.sendVideoInChannel( this.channel || '', path );
+            this.logger.info('Envio finalizado!');
         }
-
-
+        // Deleta o ZIP FILE
+        await this.deleteFile(Path.resolve(path));
+        this.logger.info('Arquivo deletado!');
+        
        
+    }
+    
+    private async deleteFile( path: string){
+        await new Promise( (resolve, reject ) => {
+            fs.unlink(path, (err) => {
+                if (err) reject(err);
+                resolve("Arquivo deletado!");
+            });
+        });
     }
 
     public error(error: Error) {
