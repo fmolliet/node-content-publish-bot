@@ -7,6 +7,8 @@ import ZipService from "./services/ZipService";
 import TelegramService from "./services/TelegramService";
 import { isThisTypeNode } from "typescript";
 
+
+const YIFF_KEYWORD : string = 'yiff';
 @Service('Controller')
 export default class Controller {
 
@@ -20,7 +22,7 @@ export default class Controller {
     
     private files : string[] | undefined;
     
-    private channel : string | undefined = process.env.TELEGRAM_CHANNEL ; 
+    private channel : string | undefined = process.env.TELEGRAM_CHANNEL; 
 
 
     constructor() {
@@ -28,7 +30,7 @@ export default class Controller {
     }
     
     public setChannel(  channel: string ): void {
-        if ( channel && channel.toLowerCase() === 'yiff'){
+        if ( channel && channel.toLowerCase() === YIFF_KEYWORD){
             this.channel = process.env.TELEGRAM_CHANNEL_YIFF;
             this.logger.info("Canal configurado: YIFF")
         } else {
