@@ -5,6 +5,7 @@ import Logger from "./helpers/Logger";
 import winston from "winston";
 import ZipService from "./services/ZipService";
 import TelegramService from "./services/TelegramService";
+import { isThisTypeNode } from "typescript";
 
 @Service('Controller')
 export default class Controller {
@@ -25,12 +26,22 @@ export default class Controller {
     constructor() {
         this.logger = Container.get<Logger>('Logger').getInstance();
     }
+    
+    public setChannel(  channel: string ): void {
+        if ( channel && channel.toLowerCase() === 'yiff'){
+            this.channel = process.env.TELEGRAM_CHANNEL_YIFF;
+            this.logger.info("Canal configurado: YIFF")
+        } else {
+            this.channel = process.env.TELEGRAM_CHANNEL_CATS;
+            this.logger.info("Canal configurado: GATOS")
+        }
+    }
 
-    public change(path: string, stats?: fs.Stats) {
+    public change(path: string, stats?: fs.Stats): void {
         this.logger.info('change')
     }
 
-    public init() {
+    public init(): void {
         this.logger.info('Inicializado!')
     }
 

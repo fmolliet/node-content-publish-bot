@@ -19,20 +19,20 @@ export default class App {
     @Inject('Logger')
     logger!: winston.Logger;
     
-    constructor(){
+    constructor( channel : string ){
         config();
         this.controller = Container.get<Controller>('Controller');
         this.logger = Container.get<Logger>('Logger').getInstance();
+        this.controller.setChannel(channel);
     }
     
     public listen( path : string ){
-        
+
         // TODO: Validate if dir or file exist
         try {
             this.logger.info('Escutando pasta ' + Path.resolve(path).toString() )
         
-            
-        } catch {
+        } catch ( err ){
             throw Error("Path Não encontrado");
         }
         
