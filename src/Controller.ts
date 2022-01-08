@@ -22,7 +22,7 @@ export default class Controller {
     
     private files : string[] | undefined;
     
-    private channel : string | undefined = process.env.TELEGRAM_CHANNEL; 
+    private channel : string | undefined = process.env.TELEGRAM_CHANNEL_CATS; 
 
 
     constructor() {
