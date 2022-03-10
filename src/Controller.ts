@@ -72,7 +72,7 @@ export default class Controller {
                         // Envia no canal do telegram
                         await this.telegramService.sendPhotoInChannel( this.channel || '', file )
                         // Envia via WebHook a imagem
-                        await this.discordServices.sendImage(file);
+                        await this.discordServices.sendfile(file);
                         // Deleta cada arquivo
                         this.deleteFile(file);
                     } 
@@ -85,6 +85,7 @@ export default class Controller {
 
         } else {
             await this.telegramService.sendVideoInChannel( this.channel || '', path );
+            await this.discordServices.sendfile(path);
             this.logger.info('Envio finalizado!');
         }
         // Deleta o ZIP FILE

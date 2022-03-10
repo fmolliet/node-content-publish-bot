@@ -11,7 +11,8 @@ export default class DiscordServices {
         this.webhookClient =  new WebhookClient({id: process.env.DISCORD_WEBHOOK_ID || "id", token: process.env.DISCORD_WEBHOOK_TOKEN || ""})
     }
     
-    async sendImage( image : string ){
+    // TODO: adicionar Webhook com base na configuração passada (Yiff -> nsfw e Cats -> para Blessed e memes -> memes)
+    async sendfile( image : string ){
         return this.webhookClient.send({
             username: 'Horny Bot',
             files: [new MessageAttachment(image)]
