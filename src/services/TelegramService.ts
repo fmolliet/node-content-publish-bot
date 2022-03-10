@@ -4,7 +4,6 @@ import { Service } from "typedi";
 @Service('TelegramService')
 export default class TelegramService {
 
-    
     bot : Telegraf;
     
     constructor(){

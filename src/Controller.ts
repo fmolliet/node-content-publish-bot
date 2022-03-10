@@ -6,9 +6,10 @@ import winston from "winston";
 import ZipService from "./services/ZipService";
 import TelegramService from "./services/TelegramService";
 import { isThisTypeNode } from "typescript";
-
+import DiscordServices from "./services/DiscordServices";
 
 const YIFF_KEYWORD : string = 'yiff';
+const CATS_KEYWORD : string = 'cats';
 @Service('Controller')
 export default class Controller {
 
@@ -19,6 +20,9 @@ export default class Controller {
     
     @Inject('TelegramService')
     private telegramService !: TelegramService;
+    
+    @Inject('DiscordServices')
+    private discordServices !: DiscordServices;
     
     private files : string[] | undefined;
     
@@ -32,10 +36,13 @@ export default class Controller {
     public setChannel(  channel: string ): void {
         if ( channel && channel.toLowerCase() === YIFF_KEYWORD){
             this.channel = process.env.TELEGRAM_CHANNEL_YIFF;
-            this.logger.info("Canal configurado: YIFF")
-        } else {
+            this.logger.info("Canal configurado: YIFF");
+        } else if ( channel && channel.toLowerCase() === CATS_KEYWORD) {
             this.channel = process.env.TELEGRAM_CHANNEL_CATS;
             this.logger.info("Canal configurado: GATOS")
+        } else {
+            this.channel = process.env.TELEGRAM_CHANNEL_MEME;
+            this.logger.info("Canal configurado: MEMES")
         }
     }
 
@@ -62,7 +69,10 @@ export default class Controller {
                 
                 this.files.forEach( 
                     async file => {
+                        // Envia no canal do telegram
                         await this.telegramService.sendPhotoInChannel( this.channel || '', file )
+                        // Envia via WebHook a imagem
+                        await this.discordServices.sendImage(file);
                         // Deleta cada arquivo
                         this.deleteFile(file);
                     } 

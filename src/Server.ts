@@ -8,7 +8,7 @@ const prompts = require('prompts');
   const response = await prompts({
     type: 'text',
     name: 'canal',
-    message: 'Qual canal você gostaria de postar?'
+    message: 'Qual canal você gostaria de postar? (cats/memes/yiff)'
   });
   new App(response.canal).listen(process.env.LISTEN_PATH || '');
 
