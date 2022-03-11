@@ -49,8 +49,11 @@ export default class Controller {
     }
 
     public async add(path: string, stats?: fs.Stats) {
+        
+        const filename = Path.basename(path);
+        const postUrl = this.getTwitterURL(filename);
 
-        this.logger.info(`Arquivo recebido: ${Path.basename(path)}`);
+        this.logger.info(`Arquivo recebido: ${filename} do post: ${postUrl}`);
 
         if (Path.extname(path).match(".zip")) {
             this.logger.info('Arquivo ZIP para ser extraido...');
@@ -66,7 +69,7 @@ export default class Controller {
                         // Envia no canal do telegram
                         await this.telegramService.sendPhotoInChannel( file )
                         // Envia via WebHook a imagem
-                        await this.discordServices.sendfile(file);
+                        await this.discordServices.sendfile(file, postUrl);
                         // Deleta cada arquivo
                         this.deleteFile(file);
                     } 
@@ -79,7 +82,7 @@ export default class Controller {
 
         } else {
             await this.telegramService.sendVideoInChannel( path );
-            await this.discordServices.sendfile(path);
+            await this.discordServices.sendfile(path , postUrl);
             this.logger.info('Envio finalizado!');
         }
         // Deleta o ZIP FILE
@@ -101,5 +104,10 @@ export default class Controller {
     public error(error: Error) {
         console.log('Error')
         //throw new Error('Method not implemented.');
+    }
+    
+    private getTwitterURL( filename : string ){
+        const splitFilename = filename.split(" ")[0].split("-");
+        return `https://twitter.com/${splitFilename[0]}/status/${splitFilename[1]}`;
     }
 }

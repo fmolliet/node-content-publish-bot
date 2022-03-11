@@ -1,4 +1,4 @@
-import { MessageAttachment, MessagePayload, WebhookClient } from "discord.js";
+import { MessageAttachment, MessageEmbed, MessagePayload, WebhookClient } from "discord.js";
 import { Service } from "typedi";
 
 const YIFF_KEYWORD : string = 'yiff';
@@ -41,12 +41,12 @@ export default class DiscordServices {
         this.webhookClient =  new WebhookClient({id:this.webhookId, token: this.webhookToken })
     }
     
-    // TODO: adicionar Webhook com base na configuração passada (Yiff -> nsfw e Cats -> para Blessed e memes -> memes)
-    async sendfile( image : string ){
+    async sendfile( image : string, postUrl : string ){
         return this.webhookClient!.send({
+            content: `Source: [On Twitter](${postUrl})`,
             username: this.username,
             avatarURL: this.avatar,
-            files: [new MessageAttachment(image)]
+            //files: [new MessageAttachment(image)],
         });
     }
 }
