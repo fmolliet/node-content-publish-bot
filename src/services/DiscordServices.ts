@@ -11,6 +11,7 @@ export default class DiscordServices {
     private webhookToken : string = "";
     private username     : string = "";
     private avatar       : string = "";
+    private config       : string = "";
     
     private webhookClient?: WebhookClient;
     
@@ -21,6 +22,8 @@ export default class DiscordServices {
     }
     
     public setConfig( config: string ): void {
+        
+        this.config = config;
         if ( config && config.toLowerCase() === YIFF_KEYWORD){
             this.webhookId      = process.env.DISCORD_WEBHOOK_ID_YIFF || "" ,
             this.webhookToken   = process.env.DISCORD_WEBHOOK_TOKEN_YIFF|| "" ;
@@ -60,6 +63,33 @@ export default class DiscordServices {
                 color: '#0099ff'
             })]
         })
+    }
+    
+    async sendMultifiles( images :string[], postUrl : string ){
+        
+        const files = images.map(( image )=> new MessageAttachment(image))
+        
+        await this.webhookClient!.send({
+            //content: `Source: [On Twitter](${postUrl})`,
+            username: this.username,
+            avatarURL: this.avatar,
+            files: files,
+        });
+        
+        if ( this.config && this.config.toLowerCase() === YIFF_KEYWORD ){
+            await this.webhookClient!.send({
+                username: this.username,
+                avatarURL: this.avatar,
+                embeds : [
+                    new MessageEmbed({
+                    title: ``,
+                    description: `Source: [On Twitter](${postUrl})`,
+                    color: '#0099ff'
+                })]
+            })
+        }
+        
+        return;
     }
     
 }

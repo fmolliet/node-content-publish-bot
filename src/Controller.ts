@@ -64,12 +64,14 @@ export default class Controller {
             try {
                 this.logger.info('Enviando arquivos no canal ...');
                 
+                await this.discordServices.sendMultifiles(this.files, postUrl);
+                
                 this.files.forEach( 
+                    
                     async file => {
                         // Envia no canal do telegram
                         await this.telegramService.sendPhotoInChannel( file )
                         // Envia via WebHook a imagem
-                        await this.discordServices.sendfile(file, postUrl);
                         // Deleta cada arquivo
                         this.deleteFile(file);
                     } 
