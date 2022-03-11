@@ -44,30 +44,16 @@ export default class DiscordServices {
         this.webhookClient =  new WebhookClient({id:this.webhookId, token: this.webhookToken })
     }
     
-    async sendfile( image : string, postUrl : string ){
+    async sendfile( image : string[]|string , postUrl : string ){
+        let images : string[] = [];
         
-        await this.webhookClient!.send({
-            //content: `Source: [On Twitter](${postUrl})`,
-            username: this.username,
-            avatarURL: this.avatar,
-            files: [new MessageAttachment(image)],
-        });
-        
-        return this.webhookClient!.send({
-            username: this.username,
-            avatarURL: this.avatar,
-            embeds : [
-                new MessageEmbed({
-                title: ``,
-                description: `Source: [On Twitter](${postUrl})`,
-                color: '#0099ff'
-            })]
-        })
-    }
-    
-    async sendMultifiles( images :string[], postUrl : string ){
-        
-        const files = images.map(( image )=> new MessageAttachment(image))
+        if ( image instanceof String ) {
+            images.push(image as string);
+        } else  {
+            images = image as string[];
+        }
+
+        const files = images.map(( image )=> new MessageAttachment(image));
         
         await this.webhookClient!.send({
             //content: `Source: [On Twitter](${postUrl})`,
@@ -76,7 +62,7 @@ export default class DiscordServices {
             files: files,
         });
         
-        if ( this.config && this.config.toLowerCase() === YIFF_KEYWORD ){
+         if ( this.config && this.config.toLowerCase() === YIFF_KEYWORD ){
             await this.webhookClient!.send({
                 username: this.username,
                 avatarURL: this.avatar,
@@ -88,7 +74,6 @@ export default class DiscordServices {
                 })]
             })
         }
-        
         return;
     }
     

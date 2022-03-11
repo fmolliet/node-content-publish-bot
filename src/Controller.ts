@@ -64,7 +64,7 @@ export default class Controller {
             try {
                 this.logger.info('Enviando arquivos no canal ...');
                 
-                await this.discordServices.sendMultifiles(this.files, postUrl);
+                await this.discordServices.sendfile(this.files, postUrl);
                 
                 this.files.forEach( 
                     
