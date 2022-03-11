@@ -47,7 +47,7 @@ export default class DiscordServices {
     async sendfile( image : string[]|string , postUrl : string ){
         let images : string[] = [];
         
-        if ( image instanceof String ) {
+        if ( typeof(image) === "string" ) {
             images.push(image as string);
         } else  {
             images = image as string[];
