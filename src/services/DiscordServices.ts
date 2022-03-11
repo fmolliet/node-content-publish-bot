@@ -42,11 +42,24 @@ export default class DiscordServices {
     }
     
     async sendfile( image : string, postUrl : string ){
-        return this.webhookClient!.send({
-            content: `Source: [On Twitter](${postUrl})`,
+        
+        await this.webhookClient!.send({
+            //content: `Source: [On Twitter](${postUrl})`,
             username: this.username,
             avatarURL: this.avatar,
-            //files: [new MessageAttachment(image)],
+            files: [new MessageAttachment(image)],
         });
+        
+        return this.webhookClient!.send({
+            username: this.username,
+            avatarURL: this.avatar,
+            embeds : [
+                new MessageEmbed({
+                title: ``,
+                description: `Source: [On Twitter](${postUrl})`,
+                color: '#0099ff'
+            })]
+        })
     }
+    
 }
