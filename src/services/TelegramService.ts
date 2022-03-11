@@ -20,9 +20,9 @@ export default class TelegramService {
     
     setConfig( channel: string) {
         if ( channel && channel.toLowerCase() === YIFF_KEYWORD){
-            this.channel = process.env.TELEGRAM_CHANNEL_CATS || "";
-        } else if ( channel && channel.toLowerCase() === CATS_KEYWORD) {
             this.channel = process.env.TELEGRAM_CHANNEL_YIFF || "";
+        } else if ( channel && channel.toLowerCase() === CATS_KEYWORD) {
+            this.channel = process.env.TELEGRAM_CHANNEL_CATS || "";
         } else {
             this.channel = process.env.TELEGRAM_CHANNEL_MEMES|| "";
         }
