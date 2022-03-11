@@ -36,13 +36,8 @@ export default class Controller {
     public setChannel(  channel: string ): void {
         this.discordServices.setConfig(channel);
         this.telegramService.setConfig(channel);
-        if ( channel && channel.toLowerCase() === YIFF_KEYWORD){
-            this.logger.info("Canal configurado: YIFF");
-        } else if ( channel && channel.toLowerCase() === CATS_KEYWORD) {
-            this.logger.info("Canal configurado: GATOS")
-        } else {
-            this.logger.info("Canal configurado: MEMES")
-        }
+        this.logger.info(`Canal configurado: ${channel.toUpperCase()}`);
+
     }
 
     public change(path: string, stats?: fs.Stats): void {
