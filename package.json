@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "tsc -p tsconfig.json -w --downlevelIteration",
     "build": "tsc -p tsconfig.json --downlevelIteration",
-    "local": "cls && nodemon dist/server.js -e js",
+    "local": "cls && tsc -p tsconfig.json --downlevelIteration && nodemon dist/server.js -e js",
     "start": "tsc -p tsconfig.json --downlevelIteration && node dist/server.js",
     "test": "jest"
   },

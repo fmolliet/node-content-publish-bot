@@ -7,9 +7,11 @@ import ZipService from "./services/ZipService";
 import TelegramService from "./services/TelegramService";
 import { isThisTypeNode } from "typescript";
 import DiscordServices from "./services/DiscordServices";
+import { config }  from 'dotenv';
 
 const YIFF_KEYWORD : string = 'yiff';
 const CATS_KEYWORD : string = 'cats';
+
 @Service('Controller')
 export default class Controller {
 
@@ -25,23 +27,20 @@ export default class Controller {
     private discordServices !: DiscordServices;
     
     private files : string[] | undefined;
-    
-    private channel : string | undefined = process.env.TELEGRAM_CHANNEL_CATS; 
-
 
     constructor() {
+        config();
         this.logger = Container.get<Logger>('Logger').getInstance();
     }
     
     public setChannel(  channel: string ): void {
+        this.discordServices.setConfig(channel);
+        this.telegramService.setConfig(channel);
         if ( channel && channel.toLowerCase() === YIFF_KEYWORD){
-            this.channel = process.env.TELEGRAM_CHANNEL_YIFF;
             this.logger.info("Canal configurado: YIFF");
         } else if ( channel && channel.toLowerCase() === CATS_KEYWORD) {
-            this.channel = process.env.TELEGRAM_CHANNEL_CATS;
             this.logger.info("Canal configurado: GATOS")
         } else {
-            this.channel = process.env.TELEGRAM_CHANNEL_MEME;
             this.logger.info("Canal configurado: MEMES")
         }
     }
@@ -70,7 +69,7 @@ export default class Controller {
                 this.files.forEach( 
                     async file => {
                         // Envia no canal do telegram
-                        await this.telegramService.sendPhotoInChannel( this.channel || '', file )
+                        await this.telegramService.sendPhotoInChannel( file )
                         // Envia via WebHook a imagem
                         await this.discordServices.sendfile(file);
                         // Deleta cada arquivo
@@ -84,7 +83,7 @@ export default class Controller {
             }
 
         } else {
-            await this.telegramService.sendVideoInChannel( this.channel || '', path );
+            await this.telegramService.sendVideoInChannel( path );
             await this.discordServices.sendfile(path);
             this.logger.info('Envio finalizado!');
         }
